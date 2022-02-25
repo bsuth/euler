@@ -1,0 +1,47 @@
+require('lib.stdlib')
+
+global function twoAdicOrder(n) {
+  local order = 0
+
+  while n % 2 == 0 {
+    order += 1
+    n .>>= 1
+  }
+
+  return order, n
+}
+
+global function twoAdicReduction(n) {
+  while n % 2 == 0 {
+    n .>>= 1
+  }
+
+  return n
+}
+
+-- Binary gcd: https://en.wikipedia.org/wiki/Binary_GCD_algorithm
+global function gcd(u, v) {
+  if u == 0 {
+    return v
+  } elseif v == 0 {
+    return u
+  }
+
+  local i, u = twoAdicOrder(u)
+  local j, v = twoAdicOrder(v)
+  local k = min(i, j)
+
+  while true {
+    if u > v {
+      local tmp = v
+      u = v
+      v = tmp
+    } elseif u == v {
+      return u .<< k
+    }
+
+    v = twoAdicReduction(v)
+  }
+}
+
+print(gcd(36, 24))

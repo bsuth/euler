@@ -1,0 +1,2 @@
+global min = math.min
+global max = math.max
