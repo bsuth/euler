@@ -1,0 +1,27 @@
+module function nCr(n, r) {
+  if n < r {
+    return 0
+  } elseif n < 2 * r {
+    r = n - r
+  } elseif r == 0 {
+    return 1
+  }
+
+  local result = n
+
+  for i = 2, r {
+    result *= (n - i + 1) / i
+  }
+
+  return result
+}
+
+module function nPr(n, r) {
+  local result = n
+
+  for i = 1, r - 1 {
+    result *= n - i
+  }
+
+  return result
+}
