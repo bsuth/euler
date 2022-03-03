@@ -25,3 +25,22 @@ module function nPr(n, r) {
 
   return result
 }
+
+module function combinations(S, n = #S) {
+  if n == 0 {
+    return { {} }
+  }
+
+  local lastElement = S[n]
+  local result = {}
+
+  for _, combination in pairs(combinations(S, n - 1)) {
+    table.insert(result, combination)
+
+    local withLastElement = shallowCopy(combination)
+    table.insert(withLastElement, lastElement)
+    table.insert(result, withLastElement)
+  }
+
+  return result
+}
