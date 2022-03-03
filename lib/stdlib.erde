@@ -1,2 +1,2 @@
-global min = math.min
-global max = math.max
+module min = math.min
+module max = math.max

@@ -1,0 +1,53 @@
+local min = math.min
+
+module function pAdicReduction(p, n) {
+  local order = 0
+
+  if (p == 2) {
+    while n & 1 == 1 {
+      order += 1
+      n >>= 1
+    }
+  } else {
+    while n % p == 0 {
+      order += 1
+      n /= p
+    }
+  }
+
+  return n, order
+}
+
+module function pAdicOrder(p, n) {
+  local _, order = pAdicReduction(p, n)
+  return order
+}
+
+-- Binary gcd: https://en.wikipedia.org/wiki/Binary_GCD_algorithm
+module function gcd(u, v) {
+  if u == 0 {
+    return v
+  } elseif v == 0 {
+    return u
+  }
+
+  local u, i = pAdicReduction(2, u)
+  local v, j = pAdicReduction(2, v)
+  local k = min(i, j)
+
+  while true {
+    if u > v {
+      local tmp = v
+      u = v
+      v = tmp
+    } elseif u == v {
+      return u << k
+    }
+
+    v = pAdicReduction(2, v)
+  }
+}
+
+module function lcm(a, b) {
+  return a * b / gcd(a, b)
+}
