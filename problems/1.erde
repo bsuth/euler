@@ -5,8 +5,18 @@ local function sumMultiples(divisor, limit) {
   return divisor * numMultiples * (numMultiples + 1) / 2
 }
 
-local function sumSetMultiples(set, limit) {
-  -- TODO: iterate combinations, subtract lcm. Faster way??
+local function sumSetMultiples(divisors, limit) {
+  local sum = 0
+
+  for _, divisor in ipairs(divisors) {
+    sum += sumMultiples(divisor, limit)
+  }
+
+  for _, combination in pairs(combinations(divisors)) {
+    sum -= sumMultiples(lcm(...combination), limit)
+  }
+
+  return sum
 }
 
-print(sumMultiples(3, 1000) + sumMultiples(5, 1000) - sumMultiples(15, 1000))
+print(sumSetMultiples({ 3, 5 }, 1000))
