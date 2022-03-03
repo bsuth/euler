@@ -1,11 +1,10 @@
--- Find sum of all multiples of d less than n.
--- 1. Number of multiples of d less than or equal to n is n // d
--- 1. Number of multiples of d strictly less than n is m = (n - 1) // d
--- 1. Sum of multiples after factoring out d is sum of natural numbers 1 to m
-local function sumMultiplesLessThan(d, n) {
-  local m = math.floor((n - 1) / d) 
-  return d * m * (m + 1) / 2
+local function sumMultiples(divisor, limit) {
+  local numMultiples = math.floor((limit - 1) / divisor) 
+  return divisor * numMultiples * (numMultiples + 1) / 2
 }
 
--- Remove double counted values (sumMultiples of LCM of 3, 5)
-print(sumMultiples(3, 1000) + sumMultiples(5, 1000) - sumMultiples(15, 1000))
+local function sumSetMultiples(set, limit) {
+  -- TODO: iterate combinations, subtract lcm. Faster way??
+}
+
+print(sumMultiplesLessThan(3, 1000) + sumMultiplesLessThan(5, 1000) - sumMultiplesLessThan(15, 1000))
