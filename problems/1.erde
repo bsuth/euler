@@ -1,3 +1,5 @@
+require('lib.loader')
+
 local function sumMultiples(divisor, limit) {
   local numMultiples = math.floor((limit - 1) / divisor) 
   return divisor * numMultiples * (numMultiples + 1) / 2
@@ -7,4 +9,4 @@ local function sumSetMultiples(set, limit) {
   -- TODO: iterate combinations, subtract lcm. Faster way??
 }
 
-print(sumMultiplesLessThan(3, 1000) + sumMultiplesLessThan(5, 1000) - sumMultiplesLessThan(15, 1000))
+print(sumMultiples(3, 1000) + sumMultiples(5, 1000) - sumMultiples(15, 1000))

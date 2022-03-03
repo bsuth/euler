@@ -1,0 +1,11 @@
+function globalInject(t) {
+  for key, value in pairs(t) {
+    if _G[key] == nil {
+      _G[key] = value
+    }
+  }
+}
+
+globalInject(math)
+globalInject(require('lib.nt'))
+globalInject(require('lib.sets'))
