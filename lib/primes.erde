@@ -1,0 +1,56 @@
+module function pAdicReduction(p, n) {
+  local order = 0
+
+  if (p == 2) {
+    while n & 1 == 0 {
+      order += 1
+      n >>= 1
+    }
+  } else {
+    while n % p == 0 {
+      order += 1
+      n /= p
+    }
+  }
+
+  return n, order
+}
+
+module function pAdicOrder(p, n) {
+  local _, order = pAdicReduction(p, n)
+  return order
+}
+
+-- https://en.wikipedia.org/wiki/Miller–Rabin_primality_test
+module function millerRabin(n, k) {
+  if n < 3 {
+    return n == 2
+  }
+
+  local d, r = pAdicReduction(2, n - 1)
+
+  for i = 1, k {
+    local a = math.round(2 + math.random() * (n - 4))
+    local x = a ^ d % n
+
+    if x == 1 || x == n - 1 {
+      continue
+    }
+
+    local isNotComposite = do {
+      for j = 1, r - 1 {
+        x = x * x % n
+
+        if x == n - 1 {
+          return true
+        }
+      }
+    }
+
+    if !isNotComposite {
+      return false
+    }
+  }
+
+  return true
+}

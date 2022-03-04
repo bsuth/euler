@@ -1,27 +1,5 @@
 local min = math.min
-
-module function pAdicReduction(p, n) {
-  local order = 0
-
-  if (p == 2) {
-    while n & 1 == 0 {
-      order += 1
-      n >>= 1
-    }
-  } else {
-    while n % p == 0 {
-      order += 1
-      n /= p
-    }
-  }
-
-  return n, order
-}
-
-module function pAdicOrder(p, n) {
-  local _, order = pAdicReduction(p, n)
-  return order
-}
+local { pAdicReduction } = require('lib.primes')
 
 module function gcd(...divisors) {
   local n = #divisors
