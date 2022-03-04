@@ -1,3 +1,5 @@
+local { floor, random, sqrt } = math
+
 module function pAdicReduction(p, n) {
   local order = 0
 
@@ -21,6 +23,27 @@ module function pAdicOrder(p, n) {
   return order
 }
 
+module function largestPrimeDivisor(n, d = 2) {
+  local limit = floor(sqrt(n))
+
+  local smallestPrimeDivisor = do {
+    for i = d, limit {
+      if n % i == 0 {
+        return i
+      }
+    }
+  }
+
+  if smallestPrimeDivisor == nil {
+    return n
+  }
+
+  return max(smallestPrimeDivisor, largestPrimeDivisor(
+    pAdicReduction(smallestPrimeDivisor, n),
+    smallestPrimeDivisor
+  ))
+}
+
 -- https://en.wikipedia.org/wiki/Miller–Rabin_primality_test
 module function millerRabin(n, k) {
   if n < 3 {
@@ -30,7 +53,7 @@ module function millerRabin(n, k) {
   local d, r = pAdicReduction(2, n - 1)
 
   for i = 1, k {
-    local a = math.round(2 + math.random() * (n - 4))
+    local a = floor(2 + random() * (n - 4))
     local x = a ^ d % n
 
     if x == 1 || x == n - 1 {
