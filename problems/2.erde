@@ -1,0 +1,16 @@
+local function evenFibSum(limit) {
+  local result = 0
+  local a, b = 1, 2
+
+  while b < limit {
+    result += b
+    local oldA, oldB = a, b
+    a = oldA + 2 * b
+    b = a + oldA + oldB
+  }
+
+  return result
+}
+
+print(evenFibSum(100))
+print(evenFibSum(4000000))
