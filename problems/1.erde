@@ -1,6 +1,10 @@
 require('lib.loader')
 
 local function sumMultiples(divisor, limit) {
+  if divisor == 0 || limit == 0 {
+    return 0
+  }
+
   local numMultiples = math.floor((limit - 1) / divisor) 
   return divisor * numMultiples * (numMultiples + 1) / 2
 }
@@ -13,7 +17,10 @@ local function sumSetMultiples(divisors, limit) {
   }
 
   for _, combination in pairs(combinations(divisors)) {
-    sum -= sumMultiples(lcm(...combination), limit)
+    local divisor = lcm(...combination)
+    if divisor > 1 {
+      sum -= sumMultiples(lcm(...combination), limit)
+    }
   }
 
   return sum

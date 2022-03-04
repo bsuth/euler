@@ -34,7 +34,6 @@ module function gcd(...divisors) {
 
   for i = 2, n {
     local v = divisors[i]
-    print(u, v)
 
     u = do {
       -- Binary gcd: https://en.wikipedia.org/wiki/Binary_GCD_algorithm
