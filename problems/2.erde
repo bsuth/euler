@@ -12,5 +12,4 @@ local function evenFibSum(limit) {
   return result
 }
 
-print(evenFibSum(100))
 print(evenFibSum(4000000))
