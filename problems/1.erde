@@ -1,6 +1,16 @@
-require('lib.loader')
+-- -----------------------------------------------------------------------------
+-- Problem 1
+--
+-- If we list all the natural numbers below 10 that are multiples of 3 or 5, we
+-- get 3, 5, 6 and 9. The sum of these multiples is 23.
+--
+-- Find the sum of all the multiples of 3 or 5 below 1000.
+-- -----------------------------------------------------------------------------
 
-local function sumMultiples(divisor, limit) {
+local lib = require('lib')
+local unpack = table.unpack || unpack
+
+function sumMultiples(divisor, limit) {
   if divisor == 0 || limit == 0 {
     return 0
   }
@@ -9,17 +19,17 @@ local function sumMultiples(divisor, limit) {
   return divisor * numMultiples * (numMultiples + 1) / 2
 }
 
-local function sumSetMultiples(divisors, limit) {
+function sumSetMultiples(divisors, limit) {
   local sum = 0
 
   for _, divisor in ipairs(divisors) {
     sum += sumMultiples(divisor, limit)
   }
 
-  for _, combination in pairs(combinations(divisors)) {
-    local divisor = lcm(...combination)
+  for _, combination in pairs(lib.combinations(divisors)) {
+    local divisor = lib.lcm(unpack(combination))
     if divisor > 1 {
-      sum -= sumMultiples(lcm(...combination), limit)
+      sum -= sumMultiples(lib.lcm(unpack(combination)), limit)
     }
   }
 

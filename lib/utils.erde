@@ -1,9 +1,0 @@
-module function shallowCopy(t) {
-  local copy = {}
-
-  for key, value in pairs(t) {
-    copy[key] = value
-  }
-
-  return copy
-}

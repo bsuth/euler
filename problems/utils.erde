@@ -1,0 +1,173 @@
+-- -----------------------------------------------------------------------------
+-- Constants
+-- -----------------------------------------------------------------------------
+
+-- Get the current platform path separator. Note that while this is undocumented
+-- in the Lua 5.1 manual, it is indeed supported in 5.1+.
+
+-- https://www.lua.org/manual/5.3/manual.html#pdf-package.config
+module PATH_SEPARATOR = package.config:sub(1, 1)
+
+-- -----------------------------------------------------------------------------
+-- Strings
+-- -----------------------------------------------------------------------------
+
+-- Split a string into a table.
+module function split(str, separator = '%s') {
+  local result = {}
+
+  for match in str:gmatch('([^' .. separator .. ']+)') {
+    table.insert(result, match)
+  }
+
+  return result
+}
+
+-- Remove leading / trailing whitespace from a string.
+-- Taken from: https://www.lua.org/pil/20.3.html
+module function trim(s) {
+  return (s:gsub('^%s*(.*)%s*$', '%1'))
+}
+
+-- -----------------------------------------------------------------------------
+-- Tables
+-- -----------------------------------------------------------------------------
+
+-- Create a table from the keys of another table's map elements.
+module function keys(t) {
+  local result = {}
+
+  for key, value in pairs(t) {
+    if type(key) == 'string' {
+      table.insert(result, key)
+    }
+  }
+
+  return result
+}
+
+-- Create a table from the values of another table's map elements.
+module function values(t) {
+  local result = {}
+
+  for key, value in pairs(t) {
+    if type(key) == 'string' {
+      table.insert(result, value)
+    }
+  }
+
+  return result
+}
+
+-- Map the elements of a table to different values (and optionally keys).
+module function map(t, callback) {
+  local result = {}
+
+  for key, value in pairs(t) {
+    local newValue, newKey = callback(value, key)
+
+    if newKey != nil {
+      result[newKey] = newValue
+    } elseif type(key) == 'string' {
+      result[key] = newValue
+    } else {
+      table.insert(result, newValue)
+    }
+  }
+
+  return result
+}
+
+-- Filter the elements of a table.
+module function filter(t, callback) {
+  local result = {}
+
+  for key, value in pairs(t) {
+    if callback(value, key) {
+      if type(key) == 'string' {
+        result[key] = value
+      } else {
+        table.insert(result, value)
+      }
+    }
+  }
+
+  return result
+}
+
+-- Reduce the elements of a table to a single value.
+module function reduce(t, callback, initial) {
+  local result = initial
+
+  for key, value in pairs(t) {
+    result = callback(result, value, key)
+  }
+
+  return result
+}
+
+-- Create a table from a consecutive subset of another table's array elements.
+module function slice(t, istart, iend) {
+  local result = {}
+
+  if istart == nil {
+    istart = 0
+  } elseif istart < 0 {
+    istart = istart + #t + 1
+  }
+
+  if iend == nil {
+    iend = #t
+  } elseif iend < 0 {
+    iend = iend + #t + 1
+  }
+
+  for i = istart, iend {
+    table.insert(result, t[i])
+  }
+
+  return result
+}
+
+-- Find a (value, key) pair in a table.
+module function find(t, callback) {
+  if type(callback) == 'function' {
+    for key, value in pairs(t) {
+      if callback(value, key) {
+        return value, key
+      }
+    }
+  } else {
+    for key, value in pairs(t) {
+      if value == callback {
+        return value, key
+      }
+    }
+  }
+}
+
+-- Create a shallow copy of a table.
+module function shallow(t) {
+  local copy = {}
+
+  for key, value in pairs(t) {
+    copy[key] = value
+  }
+
+  return copy
+}
+
+-- Create a deep copy of a table.
+module function deep(t) {
+  local copy = {}
+
+  for key, value in pairs(t) {
+    if type(value) == 'table' {
+      copy[key] = deep(value)
+    } else {
+      copy[key] = value
+    }
+  }
+
+  return copy
+}

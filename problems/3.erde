@@ -1,2 +1,32 @@
-require('lib.loader')
+-- -----------------------------------------------------------------------------
+-- Problem 3
+--
+-- The prime factors of 13195 are 5, 7, 13 and 29.
+--
+-- What is the largest prime factor of the number 600851475143 ?
+-- -----------------------------------------------------------------------------
+
+local lib = require('lib')
+
+function largestPrimeDivisor(n, d = 2) {
+  local limit = math.floor(math.sqrt(n))
+
+  local smallestPrimeDivisor
+  for i = d, limit {
+    if n % i == 0 {
+      smallestPrimeDivisor = i
+      break
+    }
+  }
+
+  if smallestPrimeDivisor == nil {
+    return n
+  }
+
+  return math.max(smallestPrimeDivisor, largestPrimeDivisor(
+    lib.pAdicReduction(smallestPrimeDivisor, n),
+    smallestPrimeDivisor
+  ))
+}
+
 print(largestPrimeDivisor(600851475143))

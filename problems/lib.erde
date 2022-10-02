@@ -1,0 +1,145 @@
+local utils = require('utils')
+
+-- -----------------------------------------------------------------------------
+-- Number Theory
+-- -----------------------------------------------------------------------------
+
+module function pAdicReduction(p, n) {
+  local order = 0
+
+  if (p == 2) {
+    while n & 1 == 0 {
+      order += 1
+      n >>= 1
+    }
+  } else {
+    while n % p == 0 {
+      order += 1
+      n /= p
+    }
+  }
+
+  return n, order
+}
+
+-- https://en.wikipedia.org/wiki/Binary_GCD_algorithm
+module function gcd(...divisors) {
+  local n = #divisors
+
+  if n == 0 {
+    return 0
+  }
+
+  local u = divisors[1]
+
+  for i = 2, n {
+    local v = divisors[i]
+
+    if u == 0 {
+      u = v
+    } elseif v != 0 {
+      local i, j
+      u, i = pAdicReduction(2, u)
+      v, j = pAdicReduction(2, v)
+
+      while u != v {
+        if u > v {
+          u, v = v, u
+        } else {
+          v = pAdicReduction(2, v - u)
+        }
+      }
+
+      u <<= math.min(i, j)
+    }
+  }
+
+  return u
+}
+
+module function lcm(...divisors) {
+  local n = #divisors
+
+  if n == 0 {
+    return 0
+  }
+
+  local result = 1
+  for _, divisor in pairs(divisors) {
+    result *= divisor
+  }
+
+  return result / gcd(...)
+}
+
+-- -----------------------------------------------------------------------------
+-- Set Theory
+-- -----------------------------------------------------------------------------
+
+module function nCr(n, r) {
+  if n < r {
+    return 0
+  } elseif n < 2 * r {
+    r = n - r
+  } elseif r == 0 {
+    return 1
+  }
+
+  local result = n
+
+  for i = 2, r {
+    result *= (n - i + 1) / i
+  }
+
+  return result
+}
+
+module function nPr(n, r) {
+  local result = n
+
+  for i = 1, r - 1 {
+    result *= n - i
+  }
+
+  return result
+}
+
+module function combinations(S, n = #S) {
+  if n == 0 {
+    return { {} }
+  }
+
+  local lastElement = S[n]
+  local result = {}
+
+  for _, combination in pairs(combinations(S, n - 1)) {
+    table.insert(result, combination)
+
+    local withLastElement = utils.shallow(combination)
+    table.insert(withLastElement, lastElement)
+    table.insert(result, withLastElement)
+  }
+
+  return result
+}
+
+module function permutations(S, n = #S) {
+  if n == 0 {
+    return { {} }
+  }
+
+  local lastElement = S[n]
+  local result = {}
+
+  for _, permutation in pairs(permutations(S, n - 1)) {
+    table.insert(result, permutation)
+
+    for i = 1, #permutation + 1 {
+      local withLastElement = utils.shallow(permutation)
+      table.insert(withLastElement, i, lastElement)
+      table.insert(result, withLastElement)
+    }
+  }
+
+  return result
+}
