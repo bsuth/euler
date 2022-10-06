@@ -4,6 +4,26 @@ local utils = require('utils')
 -- Number Theory
 -- -----------------------------------------------------------------------------
 
+module function sievePrimes(n) {
+  local primes = {}
+  local numbers = { 0 }
+
+  for i = 2, n {
+    table.insert(numbers, i)
+  }
+
+  for _, number in ipairs(numbers) {
+    if number != 0 {
+      table.insert(primes, number)
+      for i = 2 * number, n, number {
+        numbers[i] = 0
+      }
+    }
+  }
+
+  return primes
+}
+
 module function pAdicReduction(p, n) {
   local order = 0
 
@@ -58,18 +78,23 @@ module function gcd(...divisors) {
 }
 
 module function lcm(...divisors) {
-  local n = #divisors
+  local primes = sievePrimes(math.max(...))
+  local lcm = 1
 
-  if n == 0 {
-    return 0
+  for _, prime in ipairs(primes) {
+    local maxOrder = 0
+
+    for _, divisor in ipairs(divisors) {
+      local _, order = pAdicReduction(prime, divisor)
+      maxOrder = math.max(order, maxOrder)
+    }
+
+    if maxOrder > 0 {
+      lcm *= prime ^ maxOrder
+    }
   }
 
-  local result = 1
-  for _, divisor in pairs(divisors) {
-    result *= divisor
-  }
-
-  return result / gcd(...)
+  return lcm
 }
 
 -- -----------------------------------------------------------------------------
