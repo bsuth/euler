@@ -1,0 +1,23 @@
+-- -----------------------------------------------------------------------------
+-- Problem 7
+--
+-- By listing the first six prime numbers: 2, 3, 5, 7, 11, and 13, we can see
+-- that the 6th prime is 13.
+--
+-- What is the 10001st prime number?
+-- -----------------------------------------------------------------------------
+
+local lib = require('lib')
+
+function nthPrime(n) {
+  if n < 6 {
+    return lib.sievePrimes(13)[n]
+  } else {
+    local logN = math.log(n)
+    -- Upper bound for nth prime number
+    local limit = n * (logN + math.log(logN))
+    return lib.sievePrimes(limit)[n]
+  }
+}
+
+print(nthPrime(10001))
