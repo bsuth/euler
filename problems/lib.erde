@@ -33,6 +33,7 @@ module function pAdicReduction(p, n) {
       n >>= 1
     }
   } else {
+    -- TODO: use raw extended euclid to avoid repeated computation for % and /
     while n % p == 0 {
       order += 1
       n /= p
