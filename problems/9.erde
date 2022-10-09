@@ -1,0 +1,31 @@
+-- -----------------------------------------------------------------------------
+-- Problem 9
+--
+-- A Pythagorean triplet is a set of three natural numbers, a < b < c, for which,
+--
+-- a^2 + b^2 = c^2
+--
+-- For example, 3^2 + 4^2 = 9 + 16 = 25 = 5^2.
+--
+-- There exists exactly one Pythagorean triplet for which a + b + c = 1000.
+-- Find the product abc.
+-- -----------------------------------------------------------------------------
+
+-- Substituting a = 1000 - b - c, we get:
+--
+-- c = (b^2 + (1000 - b)^2) / (2 * (1000 - b))
+--
+-- In particular, the right side must be an integer.
+-- Simplifying, we have b^2 / (2 * (1000 - b)) + (1000 - b) / 2. Since both
+-- terms must have equivalent fractional components, we find that (1000 - b)
+-- must divide b^2. Furthermore, finding the roots of b^2 + b - 1000, we can
+-- conclude that b must be larger than 31.
+
+for b = 32, 1000 {
+  local x = (1000 - b)
+  local c = (b^2 + x^2) / (2 * x)
+  if c == math.floor(c) {
+    print((1000 - b - c) * b * c)
+    break
+  }
+}
