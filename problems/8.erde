@@ -31,23 +31,23 @@
 
 local utils = require('utils')
 
-function decodeSeries(seriesStr) {
-  seriesStr = seriesStr:gsub('%s+', '')
-  local seriesStrLen = #seriesStr
+function decodeSeries(encodedSeries) {
+  encodedSeries = encodedSeries:gsub('%s+', '')
+  local encodedSeriesLen = #encodedSeries
   local series = {}
 
-  for i = 1, seriesStrLen {
-    table.insert(series, tonumber(seriesStr:sub(i, i)))
+  for i = 1, encodedSeriesLen {
+    table.insert(series, tonumber(encodedSeries:sub(i, i)))
   }
 
   return series
 }
 
-function seriesProduct(series) {
+function seriesProduct(series, istart, iend) {
   local product = 1
   
-  for _, number in ipairs(series) {
-    product *= number
+  for i = istart, iend {
+    product *= series[i]
   }
 
   return product
@@ -62,7 +62,7 @@ function largestSeriesProduct(n, series) {
       repeat { i += 1 } until series[i + n] != 0
       i += n - 1
     } else {
-      local sliceProduct = seriesProduct(utils.slice(series, i, i + n - 1))
+      local sliceProduct = seriesProduct(series, i, i + n - 1)
       largestProduct = math.max(largestProduct, sliceProduct)
     }
   }
