@@ -27,9 +27,11 @@ function sumSetMultiples(divisors, limit) {
   }
 
   for _, combination in pairs(lib.combinations(divisors)) {
-    local divisor = lib.lcm(unpack(combination))
-    if divisor > 1 {
-      sum -= sumMultiples(lib.lcm(unpack(combination)), limit)
+    if #combination > 1 {
+      local divisor = lib.lcm(unpack(combination))
+      if divisor > 1 {
+        sum -= sumMultiples(divisor, limit)
+      }
     }
   }
 
